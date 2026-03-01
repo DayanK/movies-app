@@ -3,7 +3,8 @@ import { View, Text, Image, FlatList, TouchableOpacity, ActivityIndicator } from
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect } from "react";
 import { getSavedMovies, unsaveMovie } from "@/services/savedMovies";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback } from "react";
 
 const Save = () => {
   const [savedMovies, setSavedMovies] = useState<any[]>([]);
@@ -17,9 +18,11 @@ const Save = () => {
     setRefreshing(false);
   };
 
-  useEffect(() => {
-    loadSavedMovies();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadSavedMovies();
+    }, [])
+  );
 
   const handleRemove = async (movieId: number) => {
     await unsaveMovie(movieId);
